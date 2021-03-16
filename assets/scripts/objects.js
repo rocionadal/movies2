@@ -1,6 +1,6 @@
 const addMovieBtn = document.getElementById('add-movie-btn');
 const searchBtn = document.getElementById('search-btn');
-
+ 
 const movies = [];
 
 const renderMovies = (filter = '') => {
@@ -19,10 +19,17 @@ const renderMovies = (filter = '') => {
 
   filteredMovies.forEach(movie => {
     const movieElement = document.createElement('li');
-    let text = movie.info.title + ' - ';
-    for (const key in movie.info) {
+    if ('info' in movie) {
+
+    }
+    const { info } = movie;
+    // const { title: movieTitle } = info;
+    let { getFormattedTitle } = movie;
+    // getFormattedTitle = getFormattedTitle.bind(movie);
+    let text =  getFormattedTitle.call(movie) + ' - ';
+    for (const key in info) {
       if (key !== 'title') {
-        text = text + `${key}: ${movie.info[key]}`;
+        text = text + `${key}: ${info[key]}`;
       }
     }
     movieElement.textContent = text;
@@ -44,7 +51,10 @@ const addMovieHandler = () => {
       title,
       [extraName]: extraValue
     },
-    id: Math.random()
+    id: Math.random().toString(),
+    getFormattedTitle() {
+      return this.info.title.toUpperCase() 
+    }
   };
 
   movies.push(newMovie);
